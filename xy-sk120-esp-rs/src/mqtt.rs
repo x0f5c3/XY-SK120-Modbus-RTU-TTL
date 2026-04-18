@@ -6,13 +6,7 @@ pub struct MqttConfig {
 
 #[cfg(toml_cfg_mqtt_enabled)]
 pub const MQTT_CONFIG: MqttConfig = MqttConfig {
-    #[cfg(toml_cfg_mqtt_broker_url = "mqtt://broker.local:1883")]
     broker_url: "mqtt://broker.local:1883",
-    #[cfg(not(toml_cfg_mqtt_broker_url = "mqtt://broker.local:1883"))]
-    broker_url: "mqtt://broker.local:1883",
-    #[cfg(toml_cfg_mqtt_topic_prefix = "xy-sk120")]
-    topic_prefix: "xy-sk120",
-    #[cfg(not(toml_cfg_mqtt_topic_prefix = "xy-sk120"))]
     topic_prefix: "xy-sk120",
 };
 

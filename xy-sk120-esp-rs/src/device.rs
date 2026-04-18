@@ -157,7 +157,7 @@ where
         &mut self,
         threshold_percent: u8,
     ) -> Result<(), ModbusError> {
-        let threshold = ((threshold_percent as u16).min(100) * 100) / 100;
+        let threshold = (threshold_percent as u16).min(100);
         self.modbus
             .write_single_register(REG_MPPT_THRESHOLD, threshold)
             .await

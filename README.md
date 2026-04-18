@@ -17,7 +17,7 @@ This project allows you to control an XY-SK120 power supply (and compatible mode
 
 This repository now also includes a Rust crate generated with `esp-generate` at:
 
-- `/home/runner/work/XY-SK120-Modbus-RTU-TTL/XY-SK120-Modbus-RTU-TTL/xy-sk120-esp-rs`
+- `./xy-sk120-esp-rs`
 
 It contains only Modbus control logic, an async UART TUI, and optional compile-time MQTT config via `toml_cfg` (no web UI port).
 
