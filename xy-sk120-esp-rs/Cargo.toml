@@ -56,6 +56,11 @@ smoltcp = { version = "0.12.0", default-features = false, features = [
 critical-section = "1.2.0"
 static_cell      = "2.1.1"
 
+# Shared protocol types and COBS-framed codec used by both this firmware and
+# the desktop Tauri GUI.  Using the `alloc` feature because the firmware
+# already has an esp-alloc heap allocator.
+xy-sk120-protocol = { path = "../xy-sk120-protocol", default-features = false, features = ["alloc"] }
+
 [build-dependencies]
 toml-cfg = "0.2.0"
 
