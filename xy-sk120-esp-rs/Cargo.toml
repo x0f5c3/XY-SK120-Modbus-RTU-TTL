@@ -57,7 +57,7 @@ critical-section = "1.2.0"
 static_cell      = "2.1.1"
 
 [build-dependencies]
-toml_cfg = "0.2.0"
+toml-cfg = "0.2.0"
 
 [package.metadata.toml_cfg]
 mqtt_enabled = {}

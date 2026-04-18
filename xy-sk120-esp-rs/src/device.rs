@@ -5,9 +5,8 @@ use crate::{
     registers::{
         DATA_GROUP_BASE_ADDR, DATA_GROUP_REGISTERS, DATA_GROUP_SIZE, REG_BTF, REG_CP_ENABLE,
         REG_CP_SET, REG_EXTRACT_M, REG_F_C, REG_FACTORY_RESET, REG_I_SET, REG_LOCK, REG_MODEL,
-        REG_MPPT_ENABLE, REG_MPPT_THRESHOLD, REG_ONOFF, REG_POWER, REG_PROTECT, REG_S_LVP,
-        REG_S_OCP, REG_S_OPP, REG_S_OTP, REG_S_OVP, REG_T_IN, REG_UIN, REG_VERSION, REG_VOUT,
-        REG_V_SET,
+        REG_MPPT_ENABLE, REG_MPPT_THRESHOLD, REG_ONOFF, REG_PROTECT, REG_S_LVP, REG_S_OCP,
+        REG_S_OPP, REG_S_OTP, REG_S_OVP, REG_T_IN, REG_V_SET, REG_VERSION, REG_VOUT,
     },
 };
 
@@ -40,7 +39,9 @@ where
 
     pub async fn read_info(&mut self) -> Result<DeviceInfo, ModbusError> {
         let mut buf = [0u16; 1];
-        self.modbus.read_holding_registers(REG_MODEL, 1, &mut buf).await?;
+        self.modbus
+            .read_holding_registers(REG_MODEL, 1, &mut buf)
+            .await?;
         let model = buf[0];
         self.modbus
             .read_holding_registers(REG_VERSION, 1, &mut buf)
@@ -61,7 +62,11 @@ where
         self.modbus.write_single_register(REG_I_SET, value).await
     }
 
-    pub async fn set_voltage_current(&mut self, voltage_v: f32, current_a: f32) -> Result<(), ModbusError> {
+    pub async fn set_voltage_current(
+        &mut self,
+        voltage_v: f32,
+        current_a: f32,
+    ) -> Result<(), ModbusError> {
         self.set_voltage(voltage_v).await?;
         self.set_current(current_a).await
     }
@@ -148,7 +153,10 @@ where
             .await
     }
 
-    pub async fn set_mppt_threshold_percent(&mut self, threshold_percent: u8) -> Result<(), ModbusError> {
+    pub async fn set_mppt_threshold_percent(
+        &mut self,
+        threshold_percent: u8,
+    ) -> Result<(), ModbusError> {
         let threshold = ((threshold_percent as u16).min(100) * 100) / 100;
         self.modbus
             .write_single_register(REG_MPPT_THRESHOLD, threshold)
@@ -167,7 +175,10 @@ where
             .await
     }
 
-    pub async fn set_temperature_unit_fahrenheit(&mut self, fahrenheit: bool) -> Result<(), ModbusError> {
+    pub async fn set_temperature_unit_fahrenheit(
+        &mut self,
+        fahrenheit: bool,
+    ) -> Result<(), ModbusError> {
         self.modbus
             .write_single_register(REG_F_C, if fahrenheit { 1 } else { 0 })
             .await
@@ -181,7 +192,11 @@ where
         Ok(reg[0])
     }
 
-    pub async fn read_registers(&mut self, address: u16, count: u16) -> Result<Vec<u16, 32>, ModbusError> {
+    pub async fn read_registers(
+        &mut self,
+        address: u16,
+        count: u16,
+    ) -> Result<Vec<u16, 32>, ModbusError> {
         let count = count.min(32);
         let mut tmp = [0u16; 32];
         let got = self
@@ -199,7 +214,11 @@ where
         self.modbus.write_single_register(address, value).await
     }
 
-    pub async fn write_registers(&mut self, address: u16, values: &[u16]) -> Result<(), ModbusError> {
+    pub async fn write_registers(
+        &mut self,
+        address: u16,
+        values: &[u16],
+    ) -> Result<(), ModbusError> {
         self.modbus.write_multiple_registers(address, values).await
     }
 
@@ -228,7 +247,9 @@ where
             .await
     }
 
-    pub async fn read_live_measurements(&mut self) -> Result<(f32, f32, f32, f32, f32), ModbusError> {
+    pub async fn read_live_measurements(
+        &mut self,
+    ) -> Result<(f32, f32, f32, f32, f32), ModbusError> {
         let status = self.read_output_status().await?;
         let temp = self.read_temperature_c().await?;
         Ok((
@@ -238,12 +259,5 @@ where
             status.input_voltage,
             temp,
         ))
-    }
-
-    pub async fn _compat_register_touch(&mut self) -> Result<(), ModbusError> {
-        let _ = REG_POWER;
-        let _ = REG_IOUT;
-        let _ = REG_UIN;
-        Ok(())
     }
 }

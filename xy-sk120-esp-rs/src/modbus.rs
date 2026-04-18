@@ -86,7 +86,11 @@ where
         Ok(count as usize)
     }
 
-    pub async fn write_single_register(&mut self, addr: u16, value: u16) -> Result<(), ModbusError> {
+    pub async fn write_single_register(
+        &mut self,
+        addr: u16,
+        value: u16,
+    ) -> Result<(), ModbusError> {
         let mut req = [0u8; 8];
         req[0] = self.slave;
         req[1] = MB_FUNC_WRITE_SINGLE;
@@ -111,7 +115,11 @@ where
         Ok(())
     }
 
-    pub async fn write_multiple_registers(&mut self, addr: u16, values: &[u16]) -> Result<(), ModbusError> {
+    pub async fn write_multiple_registers(
+        &mut self,
+        addr: u16,
+        values: &[u16],
+    ) -> Result<(), ModbusError> {
         let count = values.len() as u16;
         let byte_count = (count * 2) as u8;
 
@@ -155,7 +163,10 @@ where
 
         Timer::after(self.silent_interval).await;
 
-        self.io.read_exact(resp).await.map_err(|_| ModbusError::Io)?;
+        self.io
+            .read_exact(resp)
+            .await
+            .map_err(|_| ModbusError::Io)?;
 
         let len = resp.len();
         if len < 4 {

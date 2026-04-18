@@ -25,11 +25,8 @@ where
     }
 }
 
-async fn handle_command<CON, MB>(
-    console: &mut CON,
-    device: &mut DeviceController<MB>,
-    line: &str,
-) where
+async fn handle_command<CON, MB>(console: &mut CON, device: &mut DeviceController<MB>, line: &str)
+where
     CON: Read + Write + ErrorType,
     MB: Read + Write + ErrorType,
 {
@@ -79,7 +76,14 @@ async fn handle_command<CON, MB>(
             }
         }
         "lock" => write_result(console, device.set_key_lock(true).await, "Key lock enabled").await,
-        "unlock" => write_result(console, device.set_key_lock(false).await, "Key lock disabled").await,
+        "unlock" => {
+            write_result(
+                console,
+                device.set_key_lock(false).await,
+                "Key lock disabled",
+            )
+            .await
+        }
         "status" | "read" => match device.read_output_status().await {
             Ok(s) => {
                 write_line(
@@ -114,13 +118,29 @@ async fn handle_command<CON, MB>(
             }
             Err(_) => write_line(console, "Failed to read measurements").await,
         },
-        "ovp" if tokens.len() >= 2 => parse_f32_and_apply(console, tokens[1], |v| device.set_ovp(v), "OVP updated").await,
-        "ocp" if tokens.len() >= 2 => parse_f32_and_apply(console, tokens[1], |v| device.set_ocp(v), "OCP updated").await,
-        "opp" if tokens.len() >= 2 => parse_f32_and_apply(console, tokens[1], |v| device.set_opp(v), "OPP updated").await,
-        "lvp" if tokens.len() >= 2 => parse_f32_and_apply(console, tokens[1], |v| device.set_lvp(v), "LVP updated").await,
-        "otp" if tokens.len() >= 2 => parse_f32_and_apply(console, tokens[1], |v| device.set_otp(v), "OTP updated").await,
+        "ovp" if tokens.len() >= 2 => {
+            parse_f32_and_apply(console, tokens[1], |v| device.set_ovp(v), "OVP updated").await
+        }
+        "ocp" if tokens.len() >= 2 => {
+            parse_f32_and_apply(console, tokens[1], |v| device.set_ocp(v), "OCP updated").await
+        }
+        "opp" if tokens.len() >= 2 => {
+            parse_f32_and_apply(console, tokens[1], |v| device.set_opp(v), "OPP updated").await
+        }
+        "lvp" if tokens.len() >= 2 => {
+            parse_f32_and_apply(console, tokens[1], |v| device.set_lvp(v), "LVP updated").await
+        }
+        "otp" if tokens.len() >= 2 => {
+            parse_f32_and_apply(console, tokens[1], |v| device.set_otp(v), "OTP updated").await
+        }
         "btf" if tokens.len() >= 2 => {
-            parse_f32_and_apply(console, tokens[1], |v| device.set_battery_cutoff(v), "Battery cutoff updated").await
+            parse_f32_and_apply(
+                console,
+                tokens[1],
+                |v| device.set_battery_cutoff(v),
+                "Battery cutoff updated",
+            )
+            .await
         }
         "mppt" if tokens.len() >= 2 => {
             let on = tokens[1] == "on";
@@ -143,7 +163,13 @@ async fn handle_command<CON, MB>(
             write_result(console, device.set_cp_mode(on).await, "CP mode updated").await;
         }
         "cp" if tokens.len() >= 2 => {
-            parse_f32_and_apply(console, tokens[1], |v| device.set_cp_value(v), "CP value updated").await
+            parse_f32_and_apply(
+                console,
+                tokens[1],
+                |v| device.set_cp_value(v),
+                "CP value updated",
+            )
+            .await
         }
         "tempunit" if tokens.len() >= 2 => {
             let f = matches!(tokens[1], "f" | "F");
@@ -156,7 +182,12 @@ async fn handle_command<CON, MB>(
         }
         "group" if tokens.len() >= 2 => {
             if let Ok(g) = tokens[1].parse::<u8>() {
-                write_result(console, device.call_memory_group(g).await, "Memory group applied").await;
+                write_result(
+                    console,
+                    device.call_memory_group(g).await,
+                    "Memory group applied",
+                )
+                .await;
             } else {
                 write_line(console, "Invalid group").await;
             }
@@ -176,7 +207,9 @@ async fn handle_command<CON, MB>(
         "readreg" if tokens.len() >= 3 => {
             if let (Ok(addr), Ok(count)) = (parse_u16(tokens[1]), parse_u16(tokens[2])) {
                 match device.read_registers(addr, count).await {
-                    Ok(values) => write_line(console, &format!("0x{addr:04X}: {:?}", values.as_slice())).await,
+                    Ok(values) => {
+                        write_line(console, &format!("0x{addr:04X}: {:?}", values.as_slice())).await
+                    }
                     Err(_) => write_line(console, "Failed to read registers").await,
                 }
             } else {
@@ -185,7 +218,12 @@ async fn handle_command<CON, MB>(
         }
         "writereg" if tokens.len() >= 3 => {
             if let (Ok(addr), Ok(value)) = (parse_u16(tokens[1]), parse_u16(tokens[2])) {
-                write_result(console, device.write_register(addr, value).await, "Register written").await;
+                write_result(
+                    console,
+                    device.write_register(addr, value).await,
+                    "Register written",
+                )
+                .await;
             } else {
                 write_line(console, "Invalid writereg args").await;
             }
@@ -203,7 +241,12 @@ async fn handle_command<CON, MB>(
                     }
                 }
                 if ok {
-                    write_result(console, device.write_registers(addr, &values).await, "Registers written").await;
+                    write_result(
+                        console,
+                        device.write_registers(addr, &values).await,
+                        "Registers written",
+                    )
+                    .await;
                 } else {
                     write_line(console, "Invalid mwrite values").await;
                 }
@@ -215,12 +258,14 @@ async fn handle_command<CON, MB>(
             Ok(raw) => write_line(console, &format!("Protection flags: 0x{raw:04X}")).await,
             Err(_) => write_line(console, "Failed to read protection status").await,
         },
-        "reset" => write_result(
-            console,
-            device.restore_factory_defaults().await,
-            "Factory reset command sent",
-        )
-        .await,
+        "reset" => {
+            write_result(
+                console,
+                device.restore_factory_defaults().await,
+                "Factory reset command sent",
+            )
+            .await
+        }
         _ => write_line(console, "Unknown command. Type 'help'.").await,
     }
 }
