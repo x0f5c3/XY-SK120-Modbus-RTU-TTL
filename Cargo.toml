@@ -1,0 +1,14 @@
+[workspace]
+resolver = "2"
+members  = [
+    "xy-sk120-protocol",
+    "xtask",
+    # "xy-sk120-gui",  # ← add when the Tauri crate is created
+]
+# The firmware crate must be built outside the workspace because its
+# .cargo/config.toml sets a bare-metal Xtensa target and pins the
+# Espressif "esp" toolchain channel, which would break host-targeting
+# workspace members (protocol crate, xtask, future Tauri GUI).
+# Build it with:  cd xy-sk120-esp-rs && cargo build
+#            or:  cargo xtask build-firmware
+exclude = ["xy-sk120-esp-rs"]

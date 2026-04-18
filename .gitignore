@@ -37,3 +37,6 @@ partitions.csv.md5
 
 # temp paste file
 temp-paste-file
+
+# Rust / Cargo build output (workspace-level target dir)
+/target/

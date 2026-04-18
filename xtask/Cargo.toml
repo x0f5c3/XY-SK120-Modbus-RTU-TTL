@@ -1,0 +1,9 @@
+[package]
+name    = "xtask"
+version = "0.1.0"
+edition = "2021"
+
+# xtask is a host-only helper binary; no special dependencies needed.
+[[bin]]
+name = "xtask"
+path = "src/main.rs"

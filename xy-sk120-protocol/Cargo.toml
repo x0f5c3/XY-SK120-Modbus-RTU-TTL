@@ -1,0 +1,31 @@
+[package]
+name        = "xy-sk120-protocol"
+version     = "0.1.0"
+edition     = "2021"
+rust-version = "1.76"
+description = "USB serial protocol types shared between the XY-SK120 ESP32-S3 firmware and the desktop Tauri GUI"
+license     = "MIT OR Apache-2.0"
+keywords    = ["embedded", "modbus", "protocol", "serde", "no_std"]
+
+[dependencies]
+# serde with no_std derive support
+serde = { version = "1.0", default-features = false, features = ["derive"] }
+
+# postcard – compact binary serialisation; COBS framing included
+postcard = { version = "1.1", default-features = false }
+
+# heapless – fixed-capacity collections used in all protocol types so the crate
+# works without a heap allocator; also enabled serde integration
+heapless = { version = "0.8", features = ["serde"] }
+
+[features]
+# "std" builds for desktop (Tauri GUI side)
+# - enables the std-backed codec API (for example `codec::encode_command`,
+#   `codec::encode_response`, and the frame-based decode helpers)
+# - pulls in serde/postcard std support
+default = ["std"]
+std     = ["serde/std", "postcard/use-std"]
+
+# "alloc" enables the heap-based codec helpers in no_std environments
+# (the ESP32-S3 firmware uses this together with esp-alloc)
+alloc   = ["serde/alloc", "postcard/alloc"]

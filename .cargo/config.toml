@@ -1,0 +1,6 @@
+[alias]
+# Run xtask helpers from the repo root, e.g.:
+#   cargo xtask build-firmware
+#   cargo xtask flash
+#   cargo xtask build-all
+xtask = "run --package xtask --"
