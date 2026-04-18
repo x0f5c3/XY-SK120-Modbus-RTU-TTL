@@ -1,0 +1,41 @@
+pub const REG_V_SET: u16 = 0x0000;
+pub const REG_I_SET: u16 = 0x0001;
+pub const REG_VOUT: u16 = 0x0002;
+pub const REG_IOUT: u16 = 0x0003;
+pub const REG_POWER: u16 = 0x0004;
+pub const REG_UIN: u16 = 0x0005;
+pub const REG_T_IN: u16 = 0x000D;
+pub const REG_LOCK: u16 = 0x000F;
+pub const REG_PROTECT: u16 = 0x0010;
+pub const REG_CVCC: u16 = 0x0011;
+pub const REG_ONOFF: u16 = 0x0012;
+pub const REG_F_C: u16 = 0x0013;
+pub const REG_B_LED: u16 = 0x0014;
+pub const REG_SLEEP: u16 = 0x0015;
+pub const REG_MODEL: u16 = 0x0016;
+pub const REG_VERSION: u16 = 0x0017;
+pub const REG_SLAVE_ADDR: u16 = 0x0018;
+pub const REG_BAUDRATE_L: u16 = 0x0019;
+pub const REG_EXTRACT_M: u16 = 0x001D;
+pub const REG_MPPT_ENABLE: u16 = 0x001F;
+pub const REG_MPPT_THRESHOLD: u16 = 0x0020;
+pub const REG_BTF: u16 = 0x0021;
+pub const REG_CP_ENABLE: u16 = 0x0022;
+pub const REG_CP_SET: u16 = 0x0023;
+pub const REG_FACTORY_RESET: u16 = 0x0025;
+
+pub const REG_CV_SET: u16 = 0x0050;
+pub const REG_CC_SET: u16 = 0x0051;
+pub const REG_S_LVP: u16 = 0x0052;
+pub const REG_S_OVP: u16 = 0x0053;
+pub const REG_S_OCP: u16 = 0x0054;
+pub const REG_S_OPP: u16 = 0x0055;
+pub const REG_S_OTP: u16 = 0x005C;
+
+pub const DATA_GROUP_BASE_ADDR: u16 = 0x0050;
+pub const DATA_GROUP_SIZE: u16 = 0x0010;
+pub const DATA_GROUP_REGISTERS: u16 = 14;
+
+pub const MB_FUNC_READ_HOLDING: u8 = 0x03;
+pub const MB_FUNC_WRITE_SINGLE: u8 = 0x06;
+pub const MB_FUNC_WRITE_MULTIPLE: u8 = 0x10;

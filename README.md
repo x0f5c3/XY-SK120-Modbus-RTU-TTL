@@ -13,6 +13,14 @@ This project allows you to control an XY-SK120 power supply (and compatible mode
 - Direct register access for debugging
 - Web interface (coming soon)
 
+## Rust no_std Modbus crate (ESP32-S3)
+
+This repository now also includes a Rust crate generated with `esp-generate` at:
+
+- `/home/runner/work/XY-SK120-Modbus-RTU-TTL/XY-SK120-Modbus-RTU-TTL/xy-sk120-esp-rs`
+
+It contains only Modbus control logic, an async UART TUI, and optional compile-time MQTT config via `toml_cfg` (no web UI port).
+
 ## Hardware Setup
 
 - Connect the XIAO ESP32S3 to the XY-SK120 using the TTL interface:
