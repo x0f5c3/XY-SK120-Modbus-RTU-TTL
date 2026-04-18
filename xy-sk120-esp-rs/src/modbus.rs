@@ -123,22 +123,17 @@ where
         let count = values.len() as u16;
         let byte_count = (count * 2) as u8;
 
-        let mut req = Vec::new();
-        req.push(self.slave).map_err(|_| ModbusError::Protocol)?;
-        req.push(MB_FUNC_WRITE_MULTIPLE)
-            .map_err(|_| ModbusError::Protocol)?;
-        req.extend_from_slice(&addr.to_be_bytes())
-            .map_err(|_| ModbusError::Protocol)?;
-        req.extend_from_slice(&count.to_be_bytes())
-            .map_err(|_| ModbusError::Protocol)?;
-        req.push(byte_count).map_err(|_| ModbusError::Protocol)?;
+        let mut req = Vec::with_capacity(9 + values.len() * 2);
+        req.push(self.slave);
+        req.push(MB_FUNC_WRITE_MULTIPLE);
+        req.extend_from_slice(&addr.to_be_bytes());
+        req.extend_from_slice(&count.to_be_bytes());
+        req.push(byte_count);
         for v in values {
-            req.extend_from_slice(&v.to_be_bytes())
-                .map_err(|_| ModbusError::Protocol)?;
+            req.extend_from_slice(&v.to_be_bytes());
         }
         let crc = crc16(&req);
-        req.extend_from_slice(&crc.to_le_bytes())
-            .map_err(|_| ModbusError::Protocol)?;
+        req.extend_from_slice(&crc.to_le_bytes());
 
         let mut resp = [0u8; 8];
         let received = self.transceive(req.as_slice(), &mut resp).await?;

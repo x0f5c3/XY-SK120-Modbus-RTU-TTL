@@ -53,12 +53,22 @@ where
     }
 
     pub async fn set_voltage(&mut self, voltage_v: f32) -> Result<(), ModbusError> {
-        let value = (voltage_v * 100.0) as u16;
+        let scaled = voltage_v * 100.0;
+        let value = if scaled.is_finite() {
+            scaled.clamp(0.0, u16::MAX as f32) as u16
+        } else {
+            0
+        };
         self.modbus.write_single_register(REG_V_SET, value).await
     }
 
     pub async fn set_current(&mut self, current_a: f32) -> Result<(), ModbusError> {
-        let value = (current_a * 1000.0) as u16;
+        let scaled = current_a * 1000.0;
+        let value = if scaled.is_finite() {
+            scaled.clamp(0.0, u16::MAX as f32) as u16
+        } else {
+            0
+        };
         self.modbus.write_single_register(REG_I_SET, value).await
     }
 

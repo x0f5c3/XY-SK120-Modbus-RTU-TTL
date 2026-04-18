@@ -161,29 +161,6 @@ mod alloc_helpers {
     }
 }
 
-// ── alloc heap helpers (no_std + alloc) ───────────────────────────────────────
-
-#[cfg(all(feature = "alloc", not(feature = "std")))]
-mod alloc_helpers {
-    use alloc::vec::Vec;
-
-    use super::*;
-
-    /// Encode `cmd` into a heap-allocated `Vec<u8>` (no_std + alloc environments).
-    ///
-    /// The returned vector includes the trailing `0x00` sentinel byte.
-    pub fn encode_command(cmd: &Command) -> Result<Vec<u8>, EncodeError> {
-        postcard::to_allocvec_cobs(cmd).map_err(|_| EncodeError::Serialise)
-    }
-
-    /// Encode `resp` into a heap-allocated `Vec<u8>` (no_std + alloc environments).
-    ///
-    /// The returned vector includes the trailing `0x00` sentinel byte.
-    pub fn encode_response(resp: &Response) -> Result<Vec<u8>, EncodeError> {
-        postcard::to_allocvec_cobs(resp).map_err(|_| EncodeError::Serialise)
-    }
-}
-
 #[cfg(all(feature = "alloc", not(feature = "std")))]
 pub use alloc_helpers::{encode_command, encode_response};
 

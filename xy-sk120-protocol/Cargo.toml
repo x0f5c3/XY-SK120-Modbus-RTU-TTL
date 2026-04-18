@@ -20,7 +20,8 @@ heapless = { version = "0.8", features = ["serde"] }
 
 [features]
 # "std" builds for desktop (Tauri GUI side)
-# - enables the heap-based codec helpers (encode_to_vec / decode_from_reader)
+# - enables the std-backed codec API (for example `codec::encode_command`,
+#   `codec::encode_response`, and the frame-based decode helpers)
 # - pulls in serde/postcard std support
 default = ["std"]
 std     = ["serde/std", "postcard/use-std"]
